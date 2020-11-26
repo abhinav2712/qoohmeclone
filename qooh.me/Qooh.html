@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+
+<!-- Mirrored from qooh.me/Qooh.me by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 27 Sep 2020 13:08:28 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta property="og:title" content="Ask or tell me anything anonymously" />
+    <meta property="og:url" content="Qooh.html">
+        <meta property="og:image" content="images/facebook-share-my-link-200x200.png" />
+    <title>Qoohme</title>
+    <meta name="google-site-verification" content="q3xYLrkvuNOJxaa7d3V-9Hjzcz6IRrO2K0WlA-IMmOQ" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <link href="css/main.css" rel="stylesheet" type="text/css" media="all">
+    
+    <script type="text/javascript" src="js/lib/jquery-1.9.1.js"></script>
+    
+    <script type="text/javascript">
+        var siteName ="index.html";
+    </script>
+</head><body>
+    <script type="text/javascript">
+        if (false) {
+            window.location.href = window.location.href.replace("http://", "http://m./");
+        }
+    </script>
+    <script type="text/javascript" src="scripts/jquery.colorbox.js"></script>
+    <div id="fb-popup-bg" class="invisible">
+                    <div id="facebook-popup" class="width-change">   
+                        <div id="popup-header">
+                            <div id="warning-icon"></div>
+                            <h3 id="facebook-popup-header"></h3>
+                            <input type="button" id="designed-x" onclick="return facebookDialogTemplate.hide();">
+                        </div>
+                        <div id="fb-popup-span-container">
+                            <span id="facebook-popup-text"></span>                  
+                        </div>
+                        <button id="fb-popup-button">Continue</button>
+                    </div>
+                </div>
+                <script type="text/javascript">var mobile = false</script>
+                <script type="text/javascript" src="js/FacebookHelper.js"></script>    <div id="wrapper">
+        <div id="inner">
+            <div id="main">
+                <div class="account-header"> <a href="index.html" class="logo"></a>
+                    <ul class="menu">
+                                                    <li><a href="index.html">Login</a></li>
+                            <li><a href="user/sign-up/index.html">Sign up</a></li>
+                        </ul></div><div class="container">                    
+                    <script type="text/javascript"><!--
+google_ad_client = "ca-pub-1046108362436506";
+/* header this */
+google_ad_slot = "3666114337";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<div class="adbox">
+    <script type="text/javascript"
+    src="../pagead2.googlesyndication.com/pagead/f.txt">
+    </script>
+</div>                </div>
+        
+<script>
+
+    function initializeColorBox() {
+        $(".others").colorbox({transition:"none", width:"800px", height:"275px",initialHeight:"100", initialWidth:"100",scrolling:"false"});
+    }
+    
+    $(document).ready(function(){
+        initializeColorBox();
+
+    });
+
+
+
+    function get_more_questions()
+    {
+        var page=Number($("#btn_see_more").attr("page"))+1;
+        $("#btn_see_more").remove();
+        $("#question_list #busy_span").html('<img src="images/ajax-loader.gif" />');
+        data="page="+page+"&ajax=get_questions&userid=Qooh.me";		
+        $.ajax({
+            type: "POST",
+            url: "/processes/userprofile/index.php",
+            data: data,
+            success: function(msg){
+                $("#question_list #busy_span").remove();
+                $("#question_list").append(msg);
+                initializeColorBox();
+			 
+            }
+        });
+    }
+
+    function post_question()
+    {
+        var question=encodeURIComponent($("#question_form #question").val());
+        var hp = $(".hp").val();
+        if(question.length>260){
+            $.colorbox({
+                html:'<p style="color:#D40D12;margin-top:30px;">Your question exceeded the limit of 260 characters.</p>',
+                width:'400',
+                height:'130',
+                transition:'none'
+            });
+            return false;
+        }
+        $("#question_form #busy_span").html('<img src="images/ajax-loader.gif" />');
+        var data="ajax=post_question&user=" + $("#question_form input[name=user]").val()+"&question="+question+"&hp=" + hp;		
+        $("#send").attr("disabled",true);
+        $.ajax({
+            type: "POST",
+            url: "/processes/userprofile/index.php",
+            data: data,
+            success: function(msg){
+                var sent_message=msg;
+                $("#question_form #busy_span").remove();
+                $("#question_form #question").val("");
+                $("#form_div").hide();
+                $("#question_posted_div").show();
+                $("#question_posted_div").html(sent_message);
+                $("#send").removeAttr("disabled");
+                update_inbox_count();
+			 
+            }
+        });
+        return false;
+    }
+
+
+    function ask_another_question()
+    {
+        $("#form_div").show();
+        $("#question_posted_div").hide();
+
+    }
+
+    function follow_me()
+    {
+        var user="Qooh.html";
+        data="ajax=follow_me&userid="+user;
+        $.ajax({
+            type: "POST",
+            url: "/processes/userprofile/index.php",
+            data: data,
+            success: function(msg){
+                if(msg!="false")
+                {
+					
+                    $("#follow_span").html('<span class="unfollow_btn"><a href="javascript:unfollow_me()">Untag</a></span>');
+                }
+                else
+                {
+                    $html='<p style=\"padding-top:10px;padding-right:40px\">Please Login to tag this user<p>';
+                    $.colorbox({html:$html,
+                        transition:'none'});
+                }
+				
+            }
+        });
+    }
+
+    function unfollow_me()
+    {
+        var user="Qooh.html";
+        data="ajax=unfollow_me&userid="+user;
+        $.ajax({
+            type: "POST",
+            url: "/processes/userprofile/index.php",
+            data: data,
+            success: function(msg){
+                if(msg!="false")
+                {
+					
+                    $("#follow_span").html('<span class="follow_btn"><a href="javascript:follow_me()">Tag</a></span>');
+                }
+                else
+                {
+                    alert("Please log in to follow this user");
+                }
+				
+            }
+        });
+
+
+    }
+
+    function deleteResponse(qid)
+    {
+        var yesno=confirm("Deleting response will move this question to your inbox. Are you sure to delete?"); 
+        if(!yesno)
+            return;
+
+        data="ajax=deleteResponse&qid="+qid;		
+        $.ajax({
+            type: "POST",
+            url: "/processes/userprofile/index.php",
+            data: data,
+            success: function(msg){
+                var feed_id="#question"+qid;
+                $(feed_id).remove();
+                update_inbox_count();
+            }
+        });
+	
+    }
+
+
+    function likeUnlike(qid, param)
+    {
+        $("#likebtn"+qid).html('<img src="images/ajax-loader.gif" />');
+        data="ajax=like_unlike&qid="+qid+"&param="+param;		
+        $.ajax({
+            type: "POST",
+            url: "/processes/userprofile/index.php",
+            data: data,
+            success: function(msg){
+                if (msg === "unsuccessful") {
+                    window.location.href = window.location.href;
+                }
+                $("#likeunlikeinfo_"+qid).html(msg);
+                $("#likebtn"+qid).html('<img src="images/ajax-loader.gif" />');
+                if(param == "like")
+                    $("#likebtn"+qid).html('<a style="float:left;"  href="javascript:likeUnlike(&quot;'+qid+'&quot;, \&quot;unlike\&quot;);" class="unlike-btn">Unlike</a>');
+                else
+                    $("#likebtn"+qid).html('<a style="float:left;"  href="javascript:likeUnlike(&quot;'+qid+'&quot;, \&quot;like\&quot;);" class="like-btn">Like</a>');
+                initializeColorBox();
+            }
+        });
+	
+	
+	
+    }
+
+
+    function update_inbox_count()
+    {
+        var data="ajax=inbox_count";
+        $.ajax({ 
+            type: "POST",
+            url: "/processes/account/inbox.php",
+            data: data,
+            success: function(msg){
+                $("#inbox_count").html(msg);
+            }
+        });
+	
+
+    }
+
+    function chageCharacterCount()
+    {
+        $count=$("#question").val().length;
+        $remaining=260-$count;
+        $("#counter").html($remaining);
+        if($remaining< 0){
+            $("#counter").attr("style","color:#D40D12;");
+        }
+        else{
+            $("#counter").attr("style","color:#ccc;");
+        }
+
+    }
+
+</script>
+
+<div class="container">
+    <div id="content" class="page hold">
+        <div class="main-column">
+                        <div id="question_posted_div" style="display:none;">
+            </div>
+            <div id="form_div">
+                                                            <div class="questionTitle">
+                            <h2> Ask or tell me anything you like </h2>
+                        </div>
+                        <form name="question_form"  id="question_form"  method="post" action="#" class="questionForm" onsubmit="return post_question();">
+                            <textarea name="question" id="question"  class="required text-area" title="Please type your question" onkeyup="chageCharacterCount()"></textarea><br />
+                            <input type="text" name="hp" class="hp" style="width: 1px; height: 1px; border: 0px !important; float: right;">
+                                                        <input type="submit" name="submit" id="send" value="Send" class="submit button"/>
+                            <span id="busy_span"></span>
+                            <br />
+                            <input type="hidden" name="user" value="285" />
+                            <input type="hidden" name="process" value="" />
+                        </form>
+
+                                                </div>
+            <div id="responded_question">
+                <div class="respond-title"><h2>Replies (1)</h2>
+                </div>
+                <div id="question_list">
+                    
+<div class="question hold" id="question1503">
+	<div class="qa-user-image">
+
+		<a class="responder" href="Qooh.html">
+                        <!--googleoff: all-->
+			<img
+			src="photos/profile/55x55/Qooh.me.jpg/0.jpg"
+			title="Qooh.me" width="55" height="55" />
+                        <!--googleon: all-->
+		</a>
+	</div>
+	<div class="qa-content">
+		<span id="question_span"><strong>Describe yourself in 3 words?</strong>
+                                </span>
+		<span id="answer_span">FUN,  AND   ,   RANDOM</span>
+		<span class="question-time"><a
+                        href="Qooh.html">Qooh.me</a> replied
+        3406 days  ago </span> <span class="action"
+			style="float: right;">
+    
+    
+      </span>
+
+	</div>
+</div>
+                </div>
+            </div>
+        </div>
+        <div class="right-column">
+            <script type="text/javascript">
+    $(document).ready(function() {
+        $(".view-image").colorbox({transition:"none",initialHeight:"100", initialWidth:"100",scrolling:"false"});
+    });
+</script>
+
+<div id="sidepanel">
+    <div class="arrow"></div>
+        <div class="profile-info hold">
+        <div class="l rel mr5 mb5">
+            <!--googleoff: all-->
+            <img src="photos/profile/90x90/Qooh.me.jpg/0.jpg" height="90" width="90" onmouseover="javascript:$('#view_image_link').show();" onmouseout="javascript:$('#view_image_link').hide();">
+            <!--googleon: all-->
+            <span id="view_image_link" onmouseover="javascript:$('#view_image_link').show();" onmouseout="javascript:$('#view_image_link').hide();" style="display:none;">
+            <!--googleoff: all-->
+                <a class="view-image" href="images/profile_photo/Qooh.me.jpg">View image</a>
+            <!--googleon: all-->
+            </span>
+            <div class="c"></div>
+            <span id="follow_span">
+            <span class="follow_btn"><a href="javascript:follow_me()">Tag</a></span>            </span>
+        </div>
+        <div>
+            <!--googleoff: all--><h2>Qooh</h2><!--googleon: all-->
+            <span><em>(Qooh.me)</em></span>
+                        <span></span>
+        </div>
+        <div class="c"></div>
+        <span class="url"><a href="http://" target="_blank"></a></span>
+    </div>
+    <script type="text/javascript"><!--
+google_ad_client = "ca-pub-1046108362436506";
+/* Sidebar2 */
+google_ad_slot = "7328249135";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<div style="width: 160px; margin-left: auto; margin-right: auto;">
+    <script type="text/javascript"
+        src="../pagead2.googlesyndication.com/pagead/f.txt">
+    </script>
+</div>    </div>
+                    </div>
+    </div>
+</div>
+</div>
+</div>
+
+<div id="footerWrapper">
+    <div class="footer">
+        <script type="text/javascript"><!--
+google_ad_client = "ca-pub-1046108362436506";
+/* Footer */
+google_ad_slot = "1032866731";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<div class="adbox">
+    <script type="text/javascript"
+    src="../pagead2.googlesyndication.com/pagead/f.txt">
+    </script>
+</div>        <div id="footer-lft">
+            <p>&copy; 2015 Qooh.me</p>
+        </div>
+        <div id="footer-rht">
+            <ul class="nav">    
+                <li><a href="privacy.html">Privacy </a></li>
+                <li><a href="contact-us.html">Contact Us </a></li>
+                <li><a href="terms.html">Terms</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-23732945-1']);
+    _gaq.push(['_setDomainName', '.qooh.me']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+</body>
+
+<!-- Mirrored from qooh.me/Qooh.me by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 27 Sep 2020 13:08:30 GMT -->
+</html>
